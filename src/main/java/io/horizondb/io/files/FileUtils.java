@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Locale;
 
 /**
  * Utility methods to work with files.
@@ -206,7 +207,49 @@ public final class FileUtils {
     public static void forceDelete(Path path) throws IOException {
         Files.walkFileTree(path, DELETER);
     }
+    
+    /**
+     * Converts the specified number of bytes in KB.
+     * 
+     * @param numberOfBytes the number of bytes to convert
+     * @return the number of kilobytes
+     */
+    public static double toKiloBytes(long numberOfBytes) {
+        
+        return ((double) numberOfBytes / ONE_KB);
+    }
+    
+    /**
+     * Converts the specified number of bytes in MB.
+     * 
+     * @param numberOfBytes the number of bytes to convert
+     * @return the number of megabytes
+     */
+    public static double toMegaBytes(long numberOfBytes) {
+        
+        return ((double) numberOfBytes / ONE_MB);
+    }
 
+    /**
+     * Returns the specified number of bytes in a readable format.
+     * 
+     * @param numberOfBytes the number of bytes to display
+     * @return the specified number of bytes in a readable format.
+     */
+    public static String printNumberOfBytes(long numberOfBytes) {
+        
+        if (numberOfBytes < ONE_KB) {
+            
+            return String.format(Locale.US, "%d bytes", Long.valueOf(numberOfBytes));
+        
+        } else if (numberOfBytes < ONE_MB) {
+            System.out.println(toKiloBytes(numberOfBytes));
+            return String.format(Locale.US, "%.2g KB", Double.valueOf(toKiloBytes(numberOfBytes)));       
+        } 
+
+        return String.format(Locale.US, "%.2g MB", Double.valueOf(toMegaBytes(numberOfBytes)));
+    }
+    
     /**
      * Creates a file with the specified content.
      * 

@@ -54,4 +54,21 @@ public class FileUtilsTest {
 
         Files.delete(testDirectory);
     }
+    
+    @Test
+    public void testToKiloBytes() {
+        
+        Assert.assertEquals(0.5, FileUtils.toKiloBytes((FileUtils.ONE_KB / 2)), 0.0);
+        Assert.assertEquals(1, FileUtils.toKiloBytes(FileUtils.ONE_KB), 0.0);
+        Assert.assertEquals(1.5, FileUtils.toKiloBytes(FileUtils.ONE_KB + (FileUtils.ONE_KB / 2)), 0.0);
+        Assert.assertEquals(2, FileUtils.toKiloBytes(2 * FileUtils.ONE_KB), 0.0);
+    }
+    
+    @Test
+    public void testPrintNumberOfBytes() {
+        
+        Assert.assertEquals("512 bytes", FileUtils.printNumberOfBytes((FileUtils.ONE_KB / 2)));
+        Assert.assertEquals("1.5 KB", FileUtils.printNumberOfBytes(FileUtils.ONE_KB + (FileUtils.ONE_KB / 2)));
+        Assert.assertEquals("1.0 MB", FileUtils.printNumberOfBytes(FileUtils.ONE_MB + FileUtils.ONE_KB));
+    }
 }
