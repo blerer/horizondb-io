@@ -284,6 +284,8 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
     @Override
     public CompositeBuffer slice(int len) {
 
+        checkReadable(len);
+        
         if (this.slice == null) {
             this.slice = new CompositeBuffer(this.buffers);
         }

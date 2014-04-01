@@ -16,8 +16,6 @@
 package io.horizondb.io.buffers;
 
 import io.horizondb.io.ReadableBuffer;
-import io.horizondb.io.buffers.CompositeBuffer;
-import io.horizondb.io.buffers.HeapBuffer;
 
 import java.io.IOException;
 
@@ -556,5 +554,25 @@ public class CompositeBufferTest {
 
         slice.getBytes(0, bytes, 0, 4);
         assertArrayEquals(new byte[] { -120, 0, 0, 0 }, bytes);
+    }
+    
+    @Test
+    public void testSliceWithLenghtGreaterThanNumberOfReadableBytes() throws IOException {
+
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        
+        buffer.readByte();
+        
+        try {
+            
+            buffer.slice(6);
+            fail();
+
+        } catch (IndexOutOfBoundsException e) {
+            
+            assertTrue(true);
+        }
     }
 }
