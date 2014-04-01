@@ -355,4 +355,13 @@ public final class BitSet {
     private static long computeLimit(int numberOfBits) {
         return 1L << (numberOfBits);
     }
+
+    /**
+     * A copy of this <code>BitSet</code>.
+     * 
+     * @return a copy of this <code>BitSet</code>.
+     */
+    public BitSet duplicate() {
+        return new BitSet(this.capacity).fill(this.bits);
+    }
 }
