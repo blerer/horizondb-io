@@ -21,6 +21,7 @@ import io.horizondb.io.encoding.VarInts;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
@@ -37,7 +38,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * 
  */
 @Immutable
-public final class Serializables<T extends Serializable> implements Serializable {
+public final class Serializables<T extends Serializable> implements Iterable<T>, Serializable {
 
     /**
      * The composing serializables.
@@ -73,6 +74,14 @@ public final class Serializables<T extends Serializable> implements Serializable
     public int size() {
 
         return this.serializables.size();
+    }
+
+    /**    
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return this.serializables.iterator();
     }
 
     /**
