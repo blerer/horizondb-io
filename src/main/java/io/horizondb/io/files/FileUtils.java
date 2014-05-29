@@ -243,7 +243,7 @@ public final class FileUtils {
             return String.format(Locale.US, "%d bytes", Long.valueOf(numberOfBytes));
         
         } else if (numberOfBytes < ONE_MB) {
-            System.out.println(toKiloBytes(numberOfBytes));
+
             return String.format(Locale.US, "%.2g KB", Double.valueOf(toKiloBytes(numberOfBytes)));       
         } 
 
