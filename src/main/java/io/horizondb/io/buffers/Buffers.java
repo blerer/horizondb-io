@@ -16,8 +16,11 @@
 package io.horizondb.io.buffers;
 
 import io.horizondb.io.Buffer;
+import io.horizondb.io.BufferAllocator;
+import io.horizondb.io.ReadableBuffer;
 import io.netty.buffer.ByteBuf;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -32,6 +35,11 @@ public final class Buffers {
      * A buffer whose capacity is {@code 0}.
      */
     public static final Buffer EMPTY_BUFFER = new HeapBuffer(0);
+    
+    /**
+     * The default <code>BufferAllocator</code> instance.
+     */
+    public static final BufferAllocator DEFAULT_ALLOCATOR = new DefaultBufferAllocator();
 
     /**
      * Allocates a new buffer with the specified capacity.
@@ -109,6 +117,32 @@ public final class Buffers {
         return new HeapBuffer(array).subRegion(offset, length);
     }
 
+    /**
+     * Creates a composite buffer from the specified buffers.
+     * 
+     * @param buffers the buffer composing the composite
+     * @return a composite buffer from the specified buffers.
+     * @throws IOException if an I/O problem occurs
+     */
+    public static ReadableBuffer composite(ReadableBuffer... buffers) throws IOException {
+        
+        CompositeBuffer composite = new CompositeBuffer();
+        
+        for (ReadableBuffer readableBuffer : buffers) {
+            composite.add(readableBuffer);
+        }
+        return composite;
+    }
+    
+    /**
+     * Returns the default buffer allocator instance.
+     * 
+     * @return the default buffer allocator instance.
+     */
+    public static BufferAllocator getDefaultAllocator() {
+        return DEFAULT_ALLOCATOR;
+    }
+    
     /**
      * Must not be instantiated.
      */

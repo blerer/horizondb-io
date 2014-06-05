@@ -63,6 +63,15 @@ public enum CompressionType implements Serializable {
     }
 
     /**
+     * The binary representation of this compression type. 
+     * 
+     * @return the binary representation of this compression type
+     */
+    public int toByte() {
+        return this.b;
+    }
+    
+    /**
      * Returns the type of field represented by the next readable byte in the specified buffer.
      * 
      * @param buffer the buffer to read from.
@@ -70,16 +79,16 @@ public enum CompressionType implements Serializable {
      */
     public static CompressionType readCompressionType(ByteBuf buffer) {
 
-        return toFieldType(buffer.readByte());
+        return toCompressionType(buffer.readByte());
     }
 
     /**
      * Returns the compression type represented by the next readable byte in the specified buffer.
      * 
-     * @param buffer the buffer to read from.
+     * @param int the binary representation of the compression type
      * @return the compression type represented by the next readable byte in the specified buffer.
      */
-    private static CompressionType toFieldType(int code) {
+    public static CompressionType toCompressionType(int b) {
 
         CompressionType[] values = CompressionType.values();
 
@@ -87,12 +96,12 @@ public enum CompressionType implements Serializable {
 
             CompressionType compressionType = values[i];
 
-            if (compressionType.b == code) {
+            if (compressionType.b == b) {
 
                 return compressionType;
             }
         }
 
-        throw new IllegalStateException("The byte " + code + " does not match any compression type");
+        throw new IllegalStateException("The byte " + b + " does not match any compression type");
     }
 }
