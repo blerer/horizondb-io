@@ -15,11 +15,12 @@
  */
 package io.horizondb.io.compression;
 
-import java.io.IOException;
-
+import io.horizondb.io.ByteReader;
 import io.horizondb.io.ByteWriter;
+import io.horizondb.io.serialization.Parser;
 import io.horizondb.io.serialization.Serializable;
-import io.netty.buffer.ByteBuf;
+
+import java.io.IOException;
 
 /**
  * @author Benjamin
@@ -27,8 +28,68 @@ import io.netty.buffer.ByteBuf;
  */
 public enum CompressionType implements Serializable {
 
-    NO_COMPRESSION(0);
+    NONE(0){
+                
+        /**
+         * The decompressor instance.
+         */
+        private final NoopDecompressor decompressor = new NoopDecompressor();
 
+        /**
+         * The compressor instance.
+         */
+        private final NoopCompressor compressor = new NoopCompressor();
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Compressor newCompressor() {
+            return this.compressor;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Decompressor newDecompressor() {
+            return this.decompressor;
+        }
+    },
+    LZ4(1){
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Compressor newCompressor() {
+            return new LZ4Compressor();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Decompressor newDecompressor() {
+            return new LZ4Decompressor();
+        }
+    };
+
+    /**
+     * The parser instance.
+     */
+    private static final Parser<CompressionType> PARSER = new Parser<CompressionType>() {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public CompressionType parseFrom(ByteReader reader) throws IOException {
+
+            return CompressionType.toCompressionType(reader.readByte());
+        }
+    };
+    
     /**
      * The field type binary representation.
      */
@@ -44,6 +105,26 @@ public enum CompressionType implements Serializable {
         this.b = b;
     }
 
+    /**
+     * Creates a new <code>CompressionType</code> by reading the data from the specified reader.
+     * 
+     * @param reader the reader to read from.
+     * @throws IOException if an I/O problem occurs
+     */
+    public static CompressionType parseFrom(ByteReader reader) throws IOException {
+
+        return getParser().parseFrom(reader);
+    }
+
+    /**
+     * Returns the parser that can be used to deserialize <code>CompressionType</code> instances.
+     * @return the parser that can be used to deserialize <code>CompressionType</code> instances.
+     */
+    public static Parser<CompressionType> getParser() {
+
+        return PARSER;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -61,6 +142,21 @@ public enum CompressionType implements Serializable {
 
         writer.writeByte(this.b);
     }
+    
+    /**
+     * Creates a new <code>Compressor</code> instance.
+     * 
+     * @return a new <code>Compressor</code> instance
+     */
+    public abstract Compressor newCompressor();
+    
+    /**
+     * Creates a new <code>Decompressor</code> instance.
+     * 
+     * @return a new <code>Decompressor</code> instance
+     */
+    public abstract Decompressor newDecompressor();
+
 
     /**
      * The binary representation of this compression type. 
@@ -69,17 +165,6 @@ public enum CompressionType implements Serializable {
      */
     public int toByte() {
         return this.b;
-    }
-    
-    /**
-     * Returns the type of field represented by the next readable byte in the specified buffer.
-     * 
-     * @param buffer the buffer to read from.
-     * @return the type of field represented by the next readable byte in the specified buffer.
-     */
-    public static CompressionType readCompressionType(ByteBuf buffer) {
-
-        return toCompressionType(buffer.readByte());
     }
 
     /**
