@@ -515,6 +515,18 @@ abstract class AbstractBuffer extends AbstractReadableBuffer implements Buffer {
      * {@inheritDoc}
      */
     @Override
+    public Buffer slice(int index, int length) {
+        int readerIndex = readerIndex();
+        readerIndex(index);
+        Buffer slice = slice(length);
+        readerIndex(readerIndex);
+        return slice;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public final int capacity() {
 
         return this.length;

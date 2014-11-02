@@ -15,6 +15,7 @@
  */
 package io.horizondb.io;
 
+import java.io.IOException;
 import java.nio.ByteOrder;
 
 /**
@@ -127,4 +128,14 @@ public interface ReadableBuffer extends ByteReader {
      * @return a copy of this buffer with its own independent indices.
      */
     ReadableBuffer duplicate();
+
+    /**
+     * Returns a slice of the buffer starting at the specified position.
+     * 
+     * @param index the slice starting index 
+     * @param length the slice length
+     * @return a slice of the buffer starting at the specified position
+     * @throws IOException if an I/O problem occurs
+     */
+    ReadableBuffer slice(int index, int length) throws IOException;
 }

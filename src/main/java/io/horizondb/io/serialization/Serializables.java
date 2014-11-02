@@ -88,7 +88,7 @@ public final class Serializables<T extends Serializable> implements Iterable<T>,
      * {@inheritDoc}
      */
     @Override
-    public int computeSerializedSize() {
+    public int computeSerializedSize() throws IOException {
 
         int size = VarInts.computeUnsignedIntSize(this.serializables.size());
 

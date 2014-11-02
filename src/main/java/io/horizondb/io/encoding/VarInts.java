@@ -32,18 +32,6 @@ import java.io.UnsupportedEncodingException;
 public final class VarInts {
 
     /**
-     * Read the next <code>byte</code> available from the specified <code>ByteReader</code>.
-     * 
-     * @param reader the <code>ByteReader</code> to read from.
-     * @return the next <code>byte</code> available from the specified <code>ByteReader</code>.
-     * @throws IOException if an I/O problem occurs.
-     */
-    public static int readByte(ByteReader reader) throws IOException {
-
-        return reader.readByte();
-    }
-
-    /**
      * Read an <code>int</code> from the specified <code>ByteReader</code>.
      * 
      * @param reader the <code>ByteReader</code> to read from.

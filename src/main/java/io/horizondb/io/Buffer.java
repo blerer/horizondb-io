@@ -238,4 +238,10 @@ public interface Buffer extends ReadableBuffer, WritableBuffer, SliceableBuffer 
      */
     @Override
     Buffer slice(int length);
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    Buffer slice(int index, int length);
 }

@@ -29,8 +29,9 @@ public interface Serializable {
      * Returns the size in byte necessary to encode this object.
      * 
      * @return the size in byte necessary to encode this object.
+     * @throws IOException if an I/O error occurs while computing the serialized size.
      */
-    int computeSerializedSize();
+    int computeSerializedSize() throws IOException;
 
     /**
      * Serialize this object and write it to the specified writer.

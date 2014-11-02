@@ -18,7 +18,6 @@ package io.horizondb.io.buffers;
 import io.horizondb.io.Buffer;
 import io.horizondb.io.ByteReader;
 import io.horizondb.io.ReadableBuffer;
-import io.horizondb.io.buffers.NettyBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -71,6 +70,28 @@ public class NettyBufferTest {
         assertEquals(0, duplicate.readByte());
     }
 
+    @Test
+    public void testSliceWithIndex() {
+
+        ByteBuf byteBuf = Unpooled.wrappedBuffer(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 });
+
+        NettyBuffer buffer = new NettyBuffer(byteBuf);
+
+        Buffer slice = buffer.slice(3, 2);
+
+        assertEquals(2, slice.readableBytes());
+        assertEquals(0, slice.readerIndex());
+        assertEquals(0, slice.readByte());
+        assertEquals(0, slice.readByte());
+        
+        assertTrue(buffer.isReadable());
+        assertFalse(buffer.isWriteable());
+        assertEquals(10, buffer.readableBytes());
+        assertEquals(0, buffer.writeableBytes());
+        assertEquals(10, buffer.capacity());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+    }
     @Test
     public void testWrite() {
 

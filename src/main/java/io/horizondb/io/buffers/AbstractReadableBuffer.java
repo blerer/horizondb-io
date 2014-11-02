@@ -185,6 +185,18 @@ abstract class AbstractReadableBuffer implements ReadableBuffer {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ReadableBuffer slice(int index, int length) throws IOException {
+        int readerIndex = readerIndex();
+        readerIndex(index);
+        ReadableBuffer slice = slice(length);
+        readerIndex(readerIndex);
+        return slice;
+    }
+    
+    /**
      * Checks that the specified amount of bytes can be read.
      * 
      * @param numberOfBytes the number of bytes to read.
