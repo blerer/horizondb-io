@@ -34,9 +34,6 @@ import java.util.Locale;
 
 /**
  * Utility methods to work with files.
- * 
- * @author benjamin
- * 
  */
 public final class FileUtils {
 
@@ -262,6 +259,19 @@ public final class FileUtils {
         try (OutputStream output = Files.newOutputStream(filePath)) {
             output.write(content);
             output.flush();
+        }
+    }
+
+    /**
+     * Creates the specified directory if it does not exists.
+     * 
+     * @param directory the directory to create
+     * @throws IOException if an I/O problem occurs.
+     */
+    public static void createDirectoriesIfNeeded(Path directory) throws IOException {
+
+        if (!Files.exists(directory)) {
+            Files.createDirectories(directory);
         }
     }
 
