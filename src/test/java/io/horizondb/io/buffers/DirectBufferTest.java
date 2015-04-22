@@ -355,4 +355,48 @@ public class DirectBufferTest {
 
         assertArrayEquals(new byte[] { 2, -120, 0, 0, 3, 4, 5, 6, 0, 0 }, bytes);
     }
+
+    @Test
+    public void testMergeWith() {
+
+        ReadableBuffer first = new DirectBuffer(ByteBuffer.allocateDirect(5).put(new byte[] { 2, -120, 0, 0, 0}));
+        ReadableBuffer second = new DirectBuffer(ByteBuffer.allocateDirect(5).put(new byte[] { 4, 5, 6, 7, 6 }));
+
+        assertFalse(first.canBeMergedWith(second));
+
+        ByteBuffer directBuffer = ByteBuffer.allocateDirect(10).put(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 });
+
+        DirectBuffer buffer = new DirectBuffer(directBuffer);
+
+        first = buffer.slice(5).duplicate();
+        second = buffer.slice(5).duplicate();
+
+        assertTrue(first.canBeMergedWith(second));
+        first.mergeWith(second);
+        byte[] bytes = new byte[10];
+        first.getBytes(0, bytes, 0, 10);
+        assertArrayEquals(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 }, bytes);
+        assertEquals(10, ((Buffer) first).capacity());
+
+        first = buffer.slice(2, 3).duplicate();
+        second = buffer.slice(5, 2).duplicate();
+
+        assertTrue(second.canBeMergedWith(first));
+        second.mergeWith(first);
+
+        bytes = new byte[5];
+        second.getBytes(0, bytes, 0, 5);
+        assertArrayEquals(new byte[] { 0, 0, 0, 4, 5 }, bytes);
+        assertEquals(5, ((Buffer) second).capacity());
+
+        first = buffer.slice(2, 3).duplicate();
+        second = buffer.slice(7, 2).duplicate();
+
+        assertFalse(first.canBeMergedWith(second));
+        try {
+            first.mergeWith(second);
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
 }

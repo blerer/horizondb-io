@@ -15,6 +15,8 @@
  */
 package io.horizondb.io.buffers;
 
+import io.horizondb.io.ReadableBuffer;
+
 import java.nio.ByteBuffer;
 
 import static org.apache.commons.lang.Validate.isTrue;
@@ -75,6 +77,48 @@ final class DirectBuffer extends AbstractBuffer {
      * {@inheritDoc}
      */
     @Override
+    public boolean canBeMergedWith(ReadableBuffer buffer) {
+        if (buffer instanceof DirectBuffer) {
+            DirectBuffer other = (DirectBuffer) buffer;
+            return other.buffer == this.buffer 
+                    && (other.offset == this.offset + this.length || this.offset == other.offset + other.length);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mergeWith(ReadableBuffer buffer) {
+        if (buffer instanceof DirectBuffer) {
+ 
+            DirectBuffer other = (DirectBuffer) buffer;
+ 
+            if (other.buffer == this.buffer)
+            {
+                if (other.offset == (this.offset + this.length)) {
+                    
+                    this.length += other.length;
+                    return;
+                } 
+
+                if (this.offset == other.offset + other.length) {
+
+                    this.offset = other.offset;
+                    this.length += other.length;
+                    return;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("The provided buffer cannot be merge with this one");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected byte doGetByte(int index) {
         return this.buffer.get(index);
     }
@@ -127,7 +171,7 @@ final class DirectBuffer extends AbstractBuffer {
         notNull(buffer, "the buffer parameter must not be null");
         isTrue(buffer.isDirect(), "the buffer must be direct");
 
-        this.buffer = buffer.duplicate();
+        this.buffer = buffer;
 
         subRegion(0, buffer.capacity());
         writerIndex(buffer.capacity());

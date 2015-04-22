@@ -1,6 +1,4 @@
 /**
- * Copyright 2013 Benjamin Lerer
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,6 +13,8 @@
  */
 package io.horizondb.io.buffers;
 
+import io.horizondb.io.ReadableBuffer;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -23,9 +23,6 @@ import static org.apache.commons.lang.Validate.notNull;
 
 /**
  * <code>SliceableBuffer</code> backed by an array.
- * 
- * @author Benjamin
- * 
  */
 public final class HeapBuffer extends AbstractBuffer {
 
@@ -87,6 +84,48 @@ public final class HeapBuffer extends AbstractBuffer {
     @Override
     protected byte doGetByte(int index) {
         return this.array[index];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canBeMergedWith(ReadableBuffer buffer) {
+        if (buffer instanceof HeapBuffer) {
+            HeapBuffer other = (HeapBuffer) buffer;
+            return other.array == this.array 
+                    && (other.offset == this.offset + this.length || this.offset == other.offset + other.length);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mergeWith(ReadableBuffer buffer) {
+        if (buffer instanceof HeapBuffer) {
+ 
+            HeapBuffer other = (HeapBuffer) buffer;
+ 
+            if (other.array == this.array)
+            {
+                if (other.offset == (this.offset + this.length)) {
+                    
+                    this.length += other.length;
+                    return;
+                } 
+
+                if (this.offset == other.offset + other.length) {
+
+                    this.offset = other.offset;
+                    this.length += other.length;
+                    return;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("The provided buffer cannot be merge with this one");
     }
 
     /**

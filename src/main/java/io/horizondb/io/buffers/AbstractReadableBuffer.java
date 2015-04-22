@@ -195,7 +195,23 @@ abstract class AbstractReadableBuffer implements ReadableBuffer {
         readerIndex(readerIndex);
         return slice;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canBeMergedWith(ReadableBuffer buffer) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mergeWith(ReadableBuffer buffer) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Checks that the specified amount of bytes can be read.
      * 

@@ -1,6 +1,4 @@
 /**
- * Copyright 2013 Benjamin Lerer
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,9 +25,6 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * A composite <code>ReadableBuffer</code>.
- * 
- * @author Benjamin
- * 
  */
 public final class CompositeBuffer extends AbstractReadableBuffer {
 
@@ -308,6 +303,16 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
     @Override
     public boolean isReadable() {
         return readableBytes() > 0;
+    }
+
+    /**
+     * Removes the specified amount bytes starting at the specified location.
+     *
+     * @param offset the position at which the bytes must be deleted
+     * @param length the amount of bytes to delete
+     */
+    public void removeBytes(int offset, int length) {
+        
     }
 
     /**

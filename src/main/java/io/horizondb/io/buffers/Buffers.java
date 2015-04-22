@@ -64,7 +64,7 @@ public final class Buffers {
      */
     public static Buffer wrap(ByteBuffer directBuffer) {
 
-        return new DirectBuffer(directBuffer);
+        return new DirectBuffer(directBuffer.duplicate());
     }
 
     /**

@@ -138,4 +138,19 @@ public interface ReadableBuffer extends ByteReader {
      * @throws IOException if an I/O problem occurs
      */
     ReadableBuffer slice(int index, int length) throws IOException;
+
+    /**
+     * Checks if the specified buffer and this one can be merged.
+     *
+     * @param buffer the buffer 
+     * @return <code>true</code> the specified buffer and this one can be merged,
+     * <code>false</code> otherwise.
+     */
+    boolean canBeMergedWith(ReadableBuffer buffer);
+
+    /**
+     * Merges the specified buffer and this one.
+     * @param buffer the buffer to merge with.
+     */
+    void mergeWith(ReadableBuffer buffer);
 }

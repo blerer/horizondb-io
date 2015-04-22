@@ -1,6 +1,4 @@
 /**
- * Copyright 2013 Benjamin Lerer
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,15 +14,13 @@
 package io.horizondb.io.buffers;
 
 import io.horizondb.io.Buffer;
+import io.horizondb.io.ReadableBuffer;
 import io.netty.buffer.ByteBuf;
 
 import static org.apache.commons.lang.Validate.notNull;
 
 /**
  * Adapts the <code>ByteBuff</code> to the <code>Buffer</code> interface.
- * 
- * @author Benjamin
- * 
  */
 final class NettyBuffer extends AbstractBuffer {
 

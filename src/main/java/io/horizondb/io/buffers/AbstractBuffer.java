@@ -47,12 +47,12 @@ abstract class AbstractBuffer extends AbstractReadableBuffer implements Buffer {
     /**
      * The region offset.
      */
-    private int offset;
+    protected int offset;
 
     /**
      * The length of the region.
      */
-    private int length;
+    protected int length;
 
     /**
      * The writer index.

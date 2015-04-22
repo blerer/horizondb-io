@@ -385,4 +385,46 @@ public class HeapBufferTest {
             assertTrue(true);
         }
     }
+
+    @Test
+    public void testMergeWith() {
+
+        ReadableBuffer first = new HeapBuffer(new byte[] { 2, -120, 0, 0, 0});
+        ReadableBuffer second = new HeapBuffer(new byte[] { 4, 5, 6, 7, 6 });
+
+        assertFalse(first.canBeMergedWith(second));
+
+        HeapBuffer buffer = new HeapBuffer(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 });
+
+        first = buffer.slice(5).duplicate();
+        second = buffer.slice(5).duplicate();
+
+        assertTrue(first.canBeMergedWith(second));
+        first.mergeWith(second);
+        assertArrayEquals(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 }, ((HeapBuffer) first).array());
+        assertEquals(0, ((HeapBuffer) first).arrayOffset());
+        assertEquals(10, ((HeapBuffer) first).capacity());
+
+        first = buffer.slice(2, 3).duplicate();
+        second = buffer.slice(5, 2).duplicate();
+
+        assertTrue(second.canBeMergedWith(first));
+        second.mergeWith(first);
+
+        byte[] bytes = new byte[5];
+        second.getBytes(0, bytes, 0, 5);
+        assertArrayEquals(new byte[] { 0, 0, 0, 4, 5 }, bytes);
+        assertEquals(2, ((HeapBuffer) second).arrayOffset());
+        assertEquals(5, ((HeapBuffer) second).capacity());
+
+        first = buffer.slice(2, 3).duplicate();
+        second = buffer.slice(7, 2).duplicate();
+
+        assertFalse(first.canBeMergedWith(second));
+        try {
+            first.mergeWith(second);
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
 }
