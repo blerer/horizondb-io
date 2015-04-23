@@ -357,7 +357,7 @@ public class DirectBufferTest {
     }
 
     @Test
-    public void testMergeWith() {
+    public void testMergeWith() throws IOException {
 
         ReadableBuffer first = new DirectBuffer(ByteBuffer.allocateDirect(5).put(new byte[] { 2, -120, 0, 0, 0}));
         ReadableBuffer second = new DirectBuffer(ByteBuffer.allocateDirect(5).put(new byte[] { 4, 5, 6, 7, 6 }));
@@ -374,7 +374,7 @@ public class DirectBufferTest {
         assertTrue(first.canBeMergedWith(second));
         first.mergeWith(second);
         byte[] bytes = new byte[10];
-        first.getBytes(0, bytes, 0, 10);
+        first.readBytes(bytes);
         assertArrayEquals(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 }, bytes);
         assertEquals(10, ((Buffer) first).capacity());
 
@@ -385,7 +385,7 @@ public class DirectBufferTest {
         second.mergeWith(first);
 
         bytes = new byte[5];
-        second.getBytes(0, bytes, 0, 5);
+        second.readBytes(bytes);
         assertArrayEquals(new byte[] { 0, 0, 0, 4, 5 }, bytes);
         assertEquals(5, ((Buffer) second).capacity());
 

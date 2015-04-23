@@ -98,15 +98,14 @@ final class DirectBuffer extends AbstractBuffer {
             if (other.buffer == this.buffer)
             {
                 if (other.offset == (this.offset + this.length)) {
-                    
-                    this.length += other.length;
+
+                    this.subRegion(this.offset, this.length + other.length);
                     return;
                 } 
 
                 if (this.offset == other.offset + other.length) {
 
-                    this.offset = other.offset;
-                    this.length += other.length;
+                    this.subRegion(other.offset, this.length + other.length);
                     return;
                 }
             }

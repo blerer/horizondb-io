@@ -387,7 +387,7 @@ public class HeapBufferTest {
     }
 
     @Test
-    public void testMergeWith() {
+    public void testMergeWith() throws IOException {
 
         ReadableBuffer first = new HeapBuffer(new byte[] { 2, -120, 0, 0, 0});
         ReadableBuffer second = new HeapBuffer(new byte[] { 4, 5, 6, 7, 6 });
@@ -401,9 +401,10 @@ public class HeapBufferTest {
 
         assertTrue(first.canBeMergedWith(second));
         first.mergeWith(second);
-        assertArrayEquals(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 }, ((HeapBuffer) first).array());
-        assertEquals(0, ((HeapBuffer) first).arrayOffset());
-        assertEquals(10, ((HeapBuffer) first).capacity());
+        byte[] bytes = new byte[10];
+        first.readBytes(bytes);
+        assertArrayEquals(new byte[] { 2, -120, 0, 0, 0, 4, 5, 6, 7, 6 }, bytes);
+        assertEquals(10, ((Buffer) first).capacity());
 
         first = buffer.slice(2, 3).duplicate();
         second = buffer.slice(5, 2).duplicate();
@@ -411,11 +412,10 @@ public class HeapBufferTest {
         assertTrue(second.canBeMergedWith(first));
         second.mergeWith(first);
 
-        byte[] bytes = new byte[5];
-        second.getBytes(0, bytes, 0, 5);
+        bytes = new byte[5];
+        second.readBytes(bytes);
         assertArrayEquals(new byte[] { 0, 0, 0, 4, 5 }, bytes);
-        assertEquals(2, ((HeapBuffer) second).arrayOffset());
-        assertEquals(5, ((HeapBuffer) second).capacity());
+        assertEquals(5, ((Buffer) second).capacity());
 
         first = buffer.slice(2, 3).duplicate();
         second = buffer.slice(7, 2).duplicate();
