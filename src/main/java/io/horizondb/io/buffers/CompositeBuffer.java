@@ -328,9 +328,23 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
         if (this.buffers.isEmpty()) {
 
             this.current = duplicate;
-        }
+            this.buffers.add(duplicate);
 
-        this.buffers.add(duplicate);
+        } else {
+            
+            int lastIndex = this.buffers.size() - 1;
+            ReadableBuffer last = this.buffers.get(lastIndex);
+            if (duplicate.canBeMergedWith(last)) {
+                duplicate.mergeWith(last);
+                this.buffers.set(lastIndex, duplicate);
+                if (this.current == last) {
+                    this.current = duplicate;
+                }
+            } else {
+                this.buffers.add(duplicate);
+            }
+        }
+        
         this.capacity += duplicate.readableBytes();
     }
 
