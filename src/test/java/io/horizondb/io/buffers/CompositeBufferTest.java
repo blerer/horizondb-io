@@ -1,6 +1,4 @@
 /**
- * Copyright 2013 Benjamin Lerer
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,10 +25,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/**
- * @author Benjamin
- * 
- */
 public class CompositeBufferTest {
 
     @Test
@@ -555,24 +549,203 @@ public class CompositeBufferTest {
         slice.getBytes(0, bytes, 0, 4);
         assertArrayEquals(new byte[] { -120, 0, 0, 0 }, bytes);
     }
-    
-    @Test
+
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testSliceWithLenghtGreaterThanNumberOfReadableBytes() throws IOException {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
         buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        
-        buffer.readByte();
-        
-        try {
-            
-            buffer.slice(6);
-            fail();
 
-        } catch (IndexOutOfBoundsException e) {
-            
-            assertTrue(true);
-        }
+        buffer.readByte();
+        buffer.slice(6);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveBytesWithNoData() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+        buffer.removeBytes(0, 5);
+    }
+
+    @Test
+    public void testRemoveBytesFirstEntireBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.removeBytes(0, 5);
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(5, buffer.readableBytes());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesFirstEntireBufferWithIndexReaderWithinRemovedBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        buffer.removeBytes(0, 5);
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(5, buffer.readableBytes());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesFirstEntireBufferWithIndexReaderAfterRemovedBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.readerIndex(6);
+        assertEquals(5, buffer.readByte());
+        buffer.removeBytes(0, 5);
+
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesLastEntireBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.removeBytes(8, 2);
+
+        assertEquals(8, buffer.readableBytes());
+        buffer.readerIndex(5);
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertFalse(buffer.isReadable());
+    }
+
+    @Test
+    public void testRemoveBytesFromTheStartOfTheFirstBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.removeBytes(0, 3);
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(7, buffer.readableBytes());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesFromTheEndOfTheFirstBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.removeBytes(2, 3);
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(7, buffer.readableBytes());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesFromTheMiddleOfTheFirstBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.removeBytes(1, 3);
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(7, buffer.readableBytes());
+        assertEquals(2, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testRemoveBytesAcrossSeveralBuffers() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.readerIndex(4);
+        buffer.removeBytes(2, 7);
+
+        assertEquals(2, buffer.readerIndex());
+        assertEquals(1, buffer.readableBytes());
+        assertEquals(6, buffer.readByte());
+
+        buffer.readerIndex(0);
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(3, buffer.readableBytes());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+    
+    @Test
+    public void testRemoveBytesAtTheEndAcrossSeveralBuffers() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+
+        buffer.readerIndex(4);
+        buffer.removeBytes(2, 8);
+
+        assertEquals(2, buffer.readerIndex());
+        assertEquals(0, buffer.readableBytes());
+
+        buffer.readerIndex(0);
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(2, buffer.readableBytes());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
     }
 }

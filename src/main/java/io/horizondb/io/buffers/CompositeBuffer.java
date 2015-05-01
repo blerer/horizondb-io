@@ -310,9 +310,78 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
      *
      * @param offset the position at which the bytes must be deleted
      * @param length the amount of bytes to delete
+     * @throws IOException if an I/O problem occurs
      */
-    public void removeBytes(int offset, int length) {
-        
+    public CompositeBuffer removeBytes(int offset, int length) throws IOException {
+
+        if (offset < 0) {
+            throw new IndexOutOfBoundsException("Expected: offset >= 0");
+        }
+
+        if (offset + length > this.capacity) {
+
+            @SuppressWarnings("boxing")
+            String msg = format("Expected: offset + length < capacity(%d)", this.capacity);
+
+            throw new IndexOutOfBoundsException(msg);
+        }
+
+        int bufferOffset = 0;
+        int remaining = length;
+
+        int numberOfBuffers = this.buffers.size();
+        for (int i = 0; i < numberOfBuffers;) {
+
+            if (remaining == 0) {
+                break;
+            }
+
+            ReadableBuffer buffer = this.buffers.get(i);
+            int readableBytes = buffer.readableBytes();
+            if (offset >= bufferOffset && offset < (bufferOffset + readableBytes)) {
+
+                int index = offset - bufferOffset;
+                int toRemove = Math.min(readableBytes - index, remaining);
+                this.buffers.remove(i);
+                if (index == 0) {
+                    if (toRemove != readableBytes) {
+                        ReadableBuffer newBuffer = buffer.slice(toRemove, readableBytes - toRemove).duplicate();
+                        this.buffers.add(i, newBuffer);
+                        i++;
+                    }
+                } else {
+                    ReadableBuffer newBuffer = buffer.slice(0, index).duplicate();
+                    this.buffers.add(i, newBuffer);
+                    int off = index + toRemove;
+                    int l = readableBytes - off;
+                    if (l != 0) {
+                        newBuffer = buffer.slice(off, l).duplicate();
+                        this.buffers.add(++i, newBuffer);
+                    }
+                    i++;
+                }
+                bufferOffset += (readableBytes - toRemove);
+                remaining -= toRemove;
+
+            } else {
+                bufferOffset += readableBytes;
+                i++;
+            }
+            numberOfBuffers = this.buffers.size();
+        }
+
+        if (offset < this.readerIndex) {
+            if (this.readerIndex < offset + length) {
+                this.readerIndex = offset;
+            } else {
+                this.readerIndex -= length;
+            }
+        }
+        this.capacity -= length;
+        this.current = this.buffers.get(0);
+        this.bufferIndex = 0;
+        this.bufferOffset = 0;
+        return this;
     }
 
     /**
