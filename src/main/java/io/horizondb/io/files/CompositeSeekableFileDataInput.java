@@ -180,7 +180,7 @@ public final class CompositeSeekableFileDataInput extends AbstractFileDataInput 
 
             int toCopy = (int) Math.min(remaining, readableBytes);
 
-            buffer.add(current.slice(toCopy));
+            buffer.addBytes(current.slice(toCopy));
             remaining -= toCopy;
 
             if (!current.isReadable()) {

@@ -129,7 +129,7 @@ public final class Buffers {
         CompositeBuffer composite = new CompositeBuffer();
         
         for (ReadableBuffer readableBuffer : buffers) {
-            composite.add(readableBuffer);
+            composite.addBytes(readableBuffer);
         }
         return composite;
     }

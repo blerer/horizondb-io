@@ -31,17 +31,17 @@ public class CompositeBufferTest {
     public void testAdd() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
 
         assertEquals(5, buffer.readableBytes());
         assertEquals(0, buffer.readerIndex());
 
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
 
         assertEquals(8, buffer.readableBytes());
         assertEquals(0, buffer.readerIndex());
 
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(10, buffer.readableBytes());
         assertEquals(0, buffer.readerIndex());
@@ -51,9 +51,9 @@ public class CompositeBufferTest {
     public void testDuplicate() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         CompositeBuffer duplicate = buffer.duplicate();
 
@@ -66,9 +66,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         CompositeBuffer slice = buffer.readerIndex(3).slice(2);
 
@@ -85,9 +85,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -148,13 +148,13 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
 
         buffer.readerIndex(5);
 
         CompositeBuffer composite = new CompositeBuffer();
-        composite.add(buffer);
+        composite.addBytes(buffer);
 
         assertEquals(4, composite.readByte());
 
@@ -165,9 +165,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -222,9 +222,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -260,9 +260,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -282,9 +282,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -318,9 +318,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -339,9 +339,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -368,9 +368,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -396,9 +396,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -459,9 +459,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -526,9 +526,9 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(0, buffer.readerIndex());
         assertEquals(10, buffer.readableBytes());
@@ -555,7 +555,7 @@ public class CompositeBufferTest {
 
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
 
         buffer.readByte();
         buffer.slice(6);
@@ -571,9 +571,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFirstEntireBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.removeBytes(0, 5);
 
@@ -590,9 +590,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFirstEntireBufferWithIndexReaderWithinRemovedBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         assertEquals(2, buffer.readByte());
         assertEquals(-120, buffer.readByte());
@@ -611,9 +611,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFirstEntireBufferWithIndexReaderAfterRemovedBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.readerIndex(6);
         assertEquals(5, buffer.readByte());
@@ -628,9 +628,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesLastEntireBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.removeBytes(8, 2);
 
@@ -646,9 +646,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFromTheStartOfTheFirstBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.removeBytes(0, 3);
 
@@ -667,9 +667,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFromTheEndOfTheFirstBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.removeBytes(2, 3);
 
@@ -688,9 +688,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesFromTheMiddleOfTheFirstBuffer() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.removeBytes(1, 3);
 
@@ -709,9 +709,9 @@ public class CompositeBufferTest {
     public void testRemoveBytesAcrossSeveralBuffers() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.readerIndex(4);
         buffer.removeBytes(2, 7);
@@ -727,14 +727,14 @@ public class CompositeBufferTest {
         assertEquals(-120, buffer.readByte());
         assertEquals(6, buffer.readByte());
     }
-    
+
     @Test
     public void testRemoveBytesAtTheEndAcrossSeveralBuffers() throws IOException {
         CompositeBuffer buffer = new CompositeBuffer();
 
-        buffer.add(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
-        buffer.add(new HeapBuffer(new byte[] { 4, 5, 6 }));
-        buffer.add(new HeapBuffer(new byte[] { 7, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 7, 6 }));
 
         buffer.readerIndex(4);
         buffer.removeBytes(2, 8);
@@ -747,5 +747,153 @@ public class CompositeBufferTest {
         assertEquals(2, buffer.readableBytes());
         assertEquals(2, buffer.readByte());
         assertEquals(-120, buffer.readByte());
+    }
+
+    @Test
+    public void testAddByteWithPositionToEmptyBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(0, new HeapBuffer(new byte[] { 2, -120}));
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(2, buffer.readableBytes());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testAddByteWithPositionOverCapacity() throws IOException {
+
+        CompositeBuffer buffer = new CompositeBuffer();
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120}));
+        buffer.addBytes(5, new HeapBuffer(new byte[] { 12, 10}));
+    }
+
+    @Test
+    public void testAddByteWithPositionAtTheBegining() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(0, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(10, buffer.readableBytes());
+
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+    }
+
+    @Test
+    public void testAddByteWithPositionAtTheBeginingOfABuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(5, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(10, buffer.readableBytes());
+
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+    
+    @Test
+    public void testAddByteWithPositionAtTheBeginingOfABufferAndIndexReaderAfterInsertionPoint() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+
+        buffer.addBytes(5, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(8, buffer.readerIndex());
+        assertEquals(2, buffer.readableBytes());
+
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testAddByteWithPositionInTheMiddleOfABuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(2, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(10, buffer.readableBytes());
+
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testAddByteWithPositionInTheMiddleOfABufferAndIndexReaderAfterInsertionPoint() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+
+        buffer.readerIndex(4);
+
+        buffer.addBytes(2, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(6, buffer.readerIndex());
+        assertEquals(4, buffer.readableBytes());
+
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+    }
+
+    @Test
+    public void testAddByteWithPositionInTheMiddleOfTheLastBuffer() throws IOException {
+        CompositeBuffer buffer = new CompositeBuffer();
+
+        buffer.addBytes(new HeapBuffer(new byte[] { 2, -120, 0, 0, 0 }));
+        buffer.addBytes(new HeapBuffer(new byte[] { 4, 5, 6 }));
+        buffer.addBytes(6, new HeapBuffer(new byte[] { 7, 6 }));
+
+        assertEquals(0, buffer.readerIndex());
+        assertEquals(10, buffer.readableBytes());
+
+        assertEquals(2, buffer.readByte());
+        assertEquals(-120, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(0, buffer.readByte());
+        assertEquals(4, buffer.readByte());
+        assertEquals(7, buffer.readByte());
+        assertEquals(6, buffer.readByte());
+        assertEquals(5, buffer.readByte());
+        assertEquals(6, buffer.readByte());
     }
 }

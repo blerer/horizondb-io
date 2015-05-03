@@ -385,12 +385,13 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
     }
 
     /**
-     * Adds the specified buffer to this composite.
-     * 
-     * @param buffer the buffer to add.
-     * @throws IOException if an I/O problem occurs.
+     * Adds the bytes of the specified buffer to this composite.
+     *
+     * @param buffer the buffer containing the bytes to add
+     * @return this <code>CompositeBuffer</code>
+     * @throws IOException if an I/O problem occurs
      */
-    public void add(ReadableBuffer buffer) throws IOException {
+    public CompositeBuffer addBytes(ReadableBuffer buffer) throws IOException {
 
         ReadableBuffer duplicate = buffer.slice(buffer.readableBytes()).duplicate();
 
@@ -413,8 +414,69 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
                 this.buffers.add(duplicate);
             }
         }
-        
+
         this.capacity += duplicate.readableBytes();
+        return this;
+    }
+
+    /**
+     * Adds the bytes of the specified buffer to this composite at the specified position.
+     *
+     * @param position the position where the bytes must be added
+     * @param buffer the buffer containing the bytes to add
+     * @return this <code>CompositeBuffer</code>
+     * @throws IOException if an I/O problem occurs
+     */
+    public CompositeBuffer addBytes(int position, ReadableBuffer buffer) throws IOException {
+
+        if (position < 0 || position > this.capacity) {
+
+            @SuppressWarnings("boxing")
+            String msg = format("capacity: %d specified position: %d", this.capacity, position);
+            throw new IndexOutOfBoundsException(msg);
+        }
+
+        if (position == this.capacity) {
+            return addBytes(buffer);
+        }
+
+        ReadableBuffer duplicate = buffer.duplicate();
+
+        int bufferOffset = 0;
+
+        for (int i = 0, m = this.buffers.size(); i < m; i++) {
+
+            if (bufferOffset == position) {
+                this.buffers.add(i, duplicate);
+                break;
+            }
+
+            ReadableBuffer oldBuffer = this.buffers.get(i);
+            int readableBytes = oldBuffer.readableBytes();
+
+            if (position < bufferOffset + readableBytes) {
+                this.buffers.remove(i);
+                int length = position - bufferOffset;
+                ReadableBuffer newBuffer = oldBuffer.slice(0, length).duplicate();
+                this.buffers.add(i, newBuffer);
+                this.buffers.add(++i, duplicate);
+                newBuffer = oldBuffer.slice(length, readableBytes - length).duplicate();
+                this.buffers.add(++i, newBuffer);
+                break;
+            }
+
+            bufferOffset += readableBytes;
+        }
+
+        if (this.readerIndex > position) {
+            this.readerIndex += duplicate.readableBytes();
+        }
+
+        this.current = this.buffers.get(0);
+        this.bufferIndex = 0;
+        this.bufferOffset = 0;
+        this.capacity += duplicate.readableBytes();
+        return this;
     }
 
     /**
