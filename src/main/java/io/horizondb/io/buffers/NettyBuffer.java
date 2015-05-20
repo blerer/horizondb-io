@@ -14,7 +14,6 @@
 package io.horizondb.io.buffers;
 
 import io.horizondb.io.Buffer;
-import io.horizondb.io.ReadableBuffer;
 import io.netty.buffer.ByteBuf;
 
 import static org.apache.commons.lang.Validate.notNull;
