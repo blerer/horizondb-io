@@ -410,6 +410,7 @@ public final class CompositeBuffer extends AbstractReadableBuffer {
                 if (this.current == last) {
                     this.current = duplicate;
                 }
+                this.capacity -= last.readableBytes();
             } else {
                 this.buffers.add(duplicate);
             }
