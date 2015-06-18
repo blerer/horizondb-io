@@ -67,28 +67,28 @@ final class LZ4Compressor implements Compressor {
      */
     @Override
     public ReadableBuffer compress(ReadableBuffer in) throws IOException {
-        
+
         adjustBufferSizeIfNeeded(in);
-        
+
         this.buffer.clear();
-        
+
         if (!in.isReadable()) {
             return this.buffer;
         }
-        
+
         if (in instanceof Buffer && ((Buffer) in).hasArray()) {
-            
+
             Buffer inputBuffer = (Buffer) in;
             compress(inputBuffer.array(), inputBuffer.arrayOffset(), inputBuffer.readableBytes());
-            
+
         } else {
-            
+
             byte[] inputArray = new byte[in.readableBytes()];
             in.readBytes(inputArray);
-            
+
             compress(inputArray, 0, inputArray.length);
         }
-        
+
         return this.buffer;
     }
 
@@ -115,7 +115,7 @@ final class LZ4Compressor implements Compressor {
      * @param length the amount of bytes that need to be uncompressed
      */
     private void compress(byte[] inputArray, int offset, int length) {
-        
+
         int compressedLength = this.compressor.compress(inputArray, offset, length, this.buffer.array(), this.buffer.arrayOffset(), this.buffer.capacity());
         this.buffer.writerIndex(compressedLength);
     }
