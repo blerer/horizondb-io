@@ -1,6 +1,4 @@
 /**
- * Copyright 2013 Benjamin Lerer
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,16 +16,14 @@ package io.horizondb.io.buffers;
 import io.horizondb.io.Buffer;
 import io.horizondb.io.BufferAllocator;
 import io.horizondb.io.ReadableBuffer;
+import io.horizondb.io.serialization.Serializable;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * <code>Buffer</code> factory methods.
- * 
- * @author Benjamin
- * 
+ * <code>Buffer</code> factory and utility methods.
  */
 public final class Buffers {
 
@@ -35,7 +31,7 @@ public final class Buffers {
      * A buffer whose capacity is {@code 0}.
      */
     public static final Buffer EMPTY_BUFFER = new HeapBuffer(0);
-    
+
     /**
      * The default <code>BufferAllocator</code> instance.
      */
@@ -125,15 +121,42 @@ public final class Buffers {
      * @throws IOException if an I/O problem occurs
      */
     public static ReadableBuffer composite(ReadableBuffer... buffers) throws IOException {
-        
+
         CompositeBuffer composite = new CompositeBuffer();
-        
+
         for (ReadableBuffer readableBuffer : buffers) {
             composite.addBytes(readableBuffer);
         }
         return composite;
     }
-    
+
+    /**
+     * Serializes the specified object.
+     * 
+     * @param serializable the object to serialize
+     * @return a buffer containing the serialized object
+     * @throws IOException if an I/O problem occurs
+     */
+    public static Buffer toBytes(Serializable serializable) throws IOException {
+        int size = serializable.computeSerializedSize();
+        Buffer buffer = Buffers.allocate(size);
+        serializable.writeTo(buffer);
+        return buffer;
+    }
+
+    /**
+     * Returns an array containing the remaining readable bytes from the specified buffer.
+     *
+     * @param buffer the buffer to convert
+     * @return an array containing the remaining readable bytes from the specified buffer
+     */
+    public static byte[] toArray(ReadableBuffer buffer) {
+        int size = buffer.readableBytes();
+        byte[] bytes = new byte[size];
+        buffer.getBytes(buffer.readerIndex(), bytes);
+        return bytes;
+    }
+
     /**
      * Returns the default buffer allocator instance.
      * 
@@ -142,7 +165,7 @@ public final class Buffers {
     public static BufferAllocator getDefaultAllocator() {
         return DEFAULT_ALLOCATOR;
     }
-    
+
     /**
      * Must not be instantiated.
      */
